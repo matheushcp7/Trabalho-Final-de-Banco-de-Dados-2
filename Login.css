@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    background-image: url('Hotel.jpg'); 
+    background-size: 1550px;
+    background-position:top;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ocupa toda a altura da tela */
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    position: relative;
+    background-color: #8f18df;
+    padding: 20px;
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 200px 1000px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    width: 500px; /* Largura fixa */
+}
+
+h1 {
+    text-align: center; /* Centraliza o título */
+}
+
+.form-group {
+    margin-bottom: 15px; /* Espaçamento entre os campos */
+}
+
+label {
+    display: block; /* Cada rótulo ocupa uma linha */
+    margin-bottom: 5px; /* Espaçamento abaixo do rótulo */
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 90%; /* Ocupa toda a largura do contêiner */
+    padding: 10px; /* Espaçamento interno */
+    border: 1px solid #ccc; /* Borda do campo */
+    border-radius: 5px; /* Bordas arredondadas dos campos */
+}
+
+.login-button {
+    width: auto; /* Botão ocupa toda a largura */
+    padding: 10px;
+    background-color: #5718a0; /* Cor de fundo do botão */
+    border: none; /* Remove bordas */
+    color: white; /* Cor do texto do botão */
+    border-radius: 4px; /* Bordas arredondadas do botão */
+    cursor: pointer; /* Cursor em forma de mão ao passar o mouse */
+    font-size: 16px; /* Tamanho da fonte do botão */
+}
+
+.login-button:hover {
+    background-color: #218838; /* Cor do botão ao passar o mouse */
+}
+
+.link-cadastro{
+    position: absolute;
+    color: #000000;
+    font-weight: bold;
+    right: 50px;
+    bottom:40px;
+}
+.link-cadastro:hover {
+    text-decoration: underline;
+    color: #00b39b;
+}
