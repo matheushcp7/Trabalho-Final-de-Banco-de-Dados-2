@@ -7,7 +7,6 @@
     <title>Página Secretaria</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -40,42 +39,41 @@
         </div>
     </nav>
 
-    <style>
-        .carousel-control-prev,
-        .carousel-control-next {
-            top: 50%;
-            transform: translateY(-50%);
-        }
+    <!-- Container de fundo com imagem -->
+    <div class="position-relative" style="background-image: url('Hotel.jpg'); background-size: cover; background-position: center; height: 100vh;">
+        
+        <!-- Div de opacidade usando Bootstrap -->
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
 
-        .card-body,
-        footer {
-            margin: 0;
-            padding: 0;
-        }
-    </style>
+        <!-- Conteúdo principal em cima da overlay -->
+        <div class="container position-relative text-white z-index-2 pt-5">
+            
+            <div class="text-center mt-5">
+                <h2 class="text-white">Lista de Reservas</h2>
+                <!-- Tabela para exibir reservas -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-white">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Quarto</th>
+                                <th>CPF do Hóspede</th>
+                                <th>Data de Entrada</th>
+                                <th>Data de Saída</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-reservas">
+                            <!-- Reservas serão inseridas aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-    <div class="container-fluid p-0">
-        <div class="card border-0">
-            <img src="Hotel.jpg" class="w-100" alt="Imagem da logo"
-                style="object-fit: cover; object-position: 30% 30%;">
+            <footer class="text-center bg-dark text-white mt-5">
+                <p class="pt-3 mb-0">2024 &copy; Desenvolvido por Lucas Flores, Maria Eduarda e Matheus Humberto | Projeto fictício.</p>
+            </footer>
         </div>
     </div>
-
-    <!-- Nova div estilizada para o conteúdo -->
-    <div class="card-body text-center bg-dark text-white">
-        <h5 class="card-title">Quem somos nós?</h5>
-        <p class="card-text" style="font-size: 15px;">
-            O Hotel Transilvania é onde pode acontecer duas opções, uma historia de amor ou uma historia de terror, nós
-            garantimos os seus sustos e gargalhadas com os nossos incriveis funcionarios e hospedes.<br>Se prepare para
-            a melhor e mais assustadora hospedagem de sua vida
-        </p>
-    </div>
-
-    <footer class="text-center bg-dark text-white">
-        <p class="pt-3 mb-0">2024 <i class="bi bi-c-circle"></i> Desenvolvido por Lucas Flores, Maria Eduarda e Matheus Humberto | Projeto fictício
-            sem fins comerciais.</p>
-    </footer>
-
 </body>
+<script src="controleReservas.js"></script>
 
 </html>
