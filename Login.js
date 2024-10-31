@@ -12,7 +12,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     });
 
     if (response.ok) {
-        window.location.href = 'Cadastro.html'; 
+        window.location.href = 'PaginaSecretaria.html'; 
     } else {
         alert('Usuário ou senha inválidos.');
     }
