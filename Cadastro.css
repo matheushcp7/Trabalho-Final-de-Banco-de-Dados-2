@@ -12,9 +12,8 @@ body {
     height: 100vh;
     background-image: url('Hotel.jpg'); 
     background-size: 1550px;
-    background-position:top;
+    background-position: top;
     background-repeat: no-repeat;
-
 }
 
 .container {
@@ -38,6 +37,7 @@ form label {
 
 form input[type="text"],
 form input[type="email"],
+form input[type="password"], /* Adicionando estilo para o campo de senha */
 form select {
     width: 100%;
     padding: 10px;
@@ -61,15 +61,13 @@ form input[type="submit"]:hover {
     background-color: #45a049;
 }
 
-
-.cadastroButton{
-    width: auto; /* Botão ocupa toda a largura */
+.cadastroButton {
+    width: auto;
     padding: 5px;
-    background-color: #5718a0; /* Cor de fundo do botão */
-    border: none; /* Remove bordas */
-    color: white; /* Cor do texto do botão */
-    border-radius: 4px; /* Bordas arredondadas do botão */
-    cursor: pointer; /* Cursor em forma de mão ao passar o mouse */
-    font-size: 16px; /* Tamanho da fonte do botão */
-
+    background-color: #5718a0;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
 }
