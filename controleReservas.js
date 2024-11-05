@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${reserva.cpf_hospede}</td>
                     <td>${formatarData(reserva.data_entrada)}</td>
                     <td>${formatarData(reserva.data_saida)}</td>
+                    <td>
+                        <button onclick="excluirReserva('${reserva.data_saida}', '${reserva.data_entrada}', ${reserva.n_quarto}, '${reserva.cpf_hospede}')" class="btn btn-danger">Excluir</button>
+                    </td>
                 `;
                 listaReservas.appendChild(tr);
             });
@@ -20,13 +23,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const errorMessage = document.getElementById('error-message');
             errorMessage.textContent = 'VOCÊ NÃO TEM PERMISSÃO DE ESTAR AQUI, TENTE NOVAMENTE E SOFRA COM AS CONSEQUENCIAS';
             errorMessage.style.color = '#ff0000'; // Define a cor do texto como vermelho forte
-            errorMessage.style.fontWeight = 'bold'
+            errorMessage.style.fontWeight = 'bold';
             errorMessage.style.display = 'block';
             const divError = document.getElementById('divError');
             divError.style.backgroundColor = '#ffffff';
         });
 });
 
+// Função para excluir reserva
+function excluirReserva(data_saida, data_entrada, n_quarto, cpf_hosp) {
+    if (confirm('Tem certeza que deseja excluir esta reserva?')) {
+        fetch('http://localhost:3000/reservas', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data_saida, data_entrada, n_quarto, cpf_hosp }),
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Reserva excluída com sucesso!');
+                window.location.reload(); // Recarrega a página para atualizar a lista de reservas
+            } else {
+                alert('Erro ao excluir reserva.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao excluir reserva:', error);
+        });
+    }
+}
 
 // Função para formatar a data
 function formatarData(data) {

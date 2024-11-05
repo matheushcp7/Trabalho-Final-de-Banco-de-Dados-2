@@ -52,8 +52,8 @@ app.post('/Hospede', upload.single('foto'), async (req, res) => {
     const tipoImagem = req.file ? req.file.mimetype : null;
 
     await currentUser.query(
-      'INSERT INTO public.hospede (cpf, nome, telefone, email, senha, especie, estagio_de_vida, foto, tipo_imagem) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
-      [cpf, nome, telefone, email, senhaCriptografada, especie, estagio_de_vida, foto, tipoImagem]
+      'INSERT INTO public.hospede (cpf_hosp, nome_hosp, telefone, email, especie, estagio_de_vida, foto, tipo_imagem) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+      [cpf, nome, telefone, email, especie, estagio_de_vida, foto, tipoImagem]
     );
     console.log("Hóspede cadastrado com sucesso.");
 
@@ -78,7 +78,6 @@ app.get('/reservas', async (req, res) => {
   try {
     console.log("Buscando reservas...");
     const result = await currentUser.query('SELECT * FROM reserva');
-    console.log("Reservas encontradas:", result.rows);
     res.json(result.rows);
   } catch (error) {
     console.error("Erro ao procurar reservas:", error);
@@ -112,6 +111,50 @@ app.get('/cardapio', async (req, res) => {
   }
 });
 
+app.post('/quartos_disponiveis', async (req, res) => {
+  // Confirma se os dados estão chegando corretamente
+  console.log("Recebendo requisição em /quartos_disponiveis");
+
+  const { data_entrada, data_saida } = req.body;  // Certifique-se de que os nomes sejam os mesmos do frontend
+  
+  console.log("Datas recebidas:", data_entrada, data_saida);  // Log das datas para verificar
+
+  if (!data_entrada || !data_saida) {
+    console.error("Erro: Datas de entrada e saída não fornecidas");
+    return res.status(400).json({ erro: 'Datas de entrada e saída são obrigatórias.' });
+  }
+
+  if (!currentUser) {
+    console.error("Erro: Usuário não autenticado");
+    return res.status(401).json({ erro: 'Usuário não autenticado.' });
+  }
+
+  try {
+      console.log("Executando consulta no banco de dados com as datas:", data_entrada, data_saida);
+
+      // Verifique se currentUser.query está configurado corretamente para fazer consultas
+      const resultado = await currentUser.query('SELECT * FROM quartos_disponiveis($1, $2);', [data_entrada, data_saida]);
+      
+      console.log("Consulta ao banco de dados concluída com sucesso:", resultado.rows);  // Log para verificar os resultados da consulta
+
+      const quartosDisponiveis = resultado.rows.map(quarto => ({
+          n_quarto: quarto.n_quarto,
+          andar: quarto.andar,
+          tema_quarto: quarto.tema_quarto,
+          val_diaria: quarto.val_diaria,
+          status_limpeza: quarto.status_limpeza
+      }));
+
+      res.json(quartosDisponiveis);
+  } catch (error) {
+      console.error('Erro ao buscar quartos disponíveis:', error);
+      res.status(500).json({ erro: 'Erro ao buscar quartos disponíveis' });
+  }
+});
+
+
+
+
 app.post('/BuscaCPF', async (req, res) => {
   if (!currentUser) {
     return res.status(401).json({ error: 'Usuário não autenticado.' });
@@ -121,7 +164,7 @@ app.post('/BuscaCPF', async (req, res) => {
   console.log("Buscando hóspede com CPF:", cpf);
 
   try {
-    const result = await currentUser.query('SELECT * FROM hospede WHERE cpf = $1', [cpf]);
+    const result = await currentUser.query('SELECT * FROM hospede WHERE cpf_hosp = $1', [cpf]);
     
     if (result.rows.length === 0) {
       console.warn("Hóspede não encontrado no banco de dados.");
@@ -142,6 +185,27 @@ app.post('/BuscaCPF', async (req, res) => {
     res.status(500).json({ error: 'Erro ao processar a solicitação.', details: error.message });
   }
 });
+
+app.delete('/reservas', async (req, res) => {
+  const { data_saida, data_entrada, n_quarto, cpf_hosp } = req.body;
+  if (!currentUser) {
+    return res.status(401).json({ error: 'Usuário não autenticado.' });
+  }
+
+  try {
+    console.log("Excluindo reserva:", { data_saida, data_entrada, n_quarto, cpf_hosp });
+    await currentUser.query(
+      'DELETE FROM reserva WHERE data_saida = $1 AND data_entrada = $2 AND n_quarto = $3 AND cpf_hospede = $4',
+      [data_saida, data_entrada, n_quarto, cpf_hosp]
+    );
+    res.status(204).send();
+  } catch (error) {
+    console.error("Erro ao excluir reserva:", error.message);
+    res.status(500).json({ error: 'Erro ao excluir reserva.', details: error.message });
+  }
+});
+
+
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
