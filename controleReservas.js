@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>
                         <button onclick="excluirReserva('${reserva.data_saida}', '${reserva.data_entrada}', ${reserva.n_quarto}, '${reserva.cpf_hospede}')" class="btn btn-danger">Excluir</button>
                     </td>
+                    <td>
+                        <button onclick="alterarReserva('${reserva.n_quarto}', '${reserva.cpf_hospede}', '${reserva.data_entrada}', '${reserva.data_saida}')" class="btn btn-primary">Alterar</button>
+                    </td>
                 `;
                 listaReservas.appendChild(tr);
             });
@@ -53,6 +56,15 @@ function excluirReserva(data_saida, data_entrada, n_quarto, cpf_hosp) {
         });
     }
 }
+
+// Função para redirecionar para a página de alteração de reserva
+function alterarReserva(n_quarto, cpf_hospede, data_entrada, data_saida) {
+    // Codifica os parâmetros na URL
+    const url = `alterarReserva.html?n_quarto=${n_quarto}&cpf_hospede=${cpf_hospede}&data_entrada=${encodeURIComponent(data_entrada)}&data_saida=${encodeURIComponent(data_saida)}`;
+    // Redireciona para a página alterarReserva.html com os dados da reserva
+    window.location.href = url;
+}
+
 
 // Função para formatar a data
 function formatarData(data) {

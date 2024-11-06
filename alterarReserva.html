@@ -36,31 +36,31 @@
 
             <div class="container mt-1">
                 <div class="row justify-content-center">
-                    <div class="col-md-6"> <!-- Define a largura da coluna -->
-                        <form id="form-reserva" class="mb-4 bg-dark ps-2 pb-2 rounded border-dark">
-                            <h3 class="text-white">Cadastrar Reservas</h3>
+                    <div class="col-md-6">
+                        <form id="form-alterar-reserva" class="mb-4 bg-dark ps-2 pb-2 rounded border-dark">
+                            <h3 class="text-white">Alterar Reserva</h3>
                             <div class="mb-3 me-3">
-                                <label for="data-entrada" class="form-label text-white">Data de Entrada:</label>
+                                <label for="n_quarto" class="form-label text-white">Número do Quarto:</label>
+                                <input type="text" class="form-control" id="n_quarto" name="n_quarto" required>
+                            </div>
+                            <div class="mb-3 me-3">
+                                <label for="cpf_hospede" class="form-label text-white">CPF do Hóspede:</label>
+                                <input type="text" class="form-control" id="cpf_hospede" name="cpf_hospede" required>
+                            </div>
+                            <div class="mb-3 me-3">
+                                <label for="data_entrada" class="form-label text-white">Data de Entrada:</label>
                                 <input type="date" class="form-control" id="data_entrada" name="data_entrada" required>
                             </div>
                             <div class="mb-3 me-3">
-                                <label for="data-saida" class="form-label text-white">Data de Saída:</label>
+                                <label for="data_saida" class="form-label text-white">Data de Saída:</label>
                                 <input type="date" class="form-control" id="data_saida" name="data_saida" required>
                             </div>
-                            <div class="mb-3 me-3">
-                                <label for="cpf-hospede" class="form-label text-white">CPF do Hóspede:</label>
-                                <input type="text" class="form-control" id="cpf-hospede" name="cpf_hospede" required>
-                            </div>
-                            <div class="mb-3 me-3">
-                                <label for="n-quarto" class="form-label text-white">Número do Quarto:</label>
-                                <input type="text" class="form-control" id="n-quarto" name="n_quarto" required>
-                            </div>
-                            <button type="button" class="btn btn-primary" onclick="criarReserva()">Fazer
-                                Reserva</button>
+                            <button type="submit" class="btn btn-primary" onclick="alterarReserva()">Alterar Reserva</button>
                         </form>
                     </div>
                 </div>
             </div>
+
             <div class="bg-dark rounded border-dark mb-2">
                 <h1> Quartos Disponíveis</h1>
                 <form id="form-pesquisa" class="mb-4">
@@ -94,8 +94,7 @@
         </div>
     </div>
 
-    <!-- Inclua o arquivo JavaScript externo -->
-    <script src="criar_reserva.js"></script>
+    <script src="alterarReserva.js"></script>
 </body>
 
 </html>

@@ -70,6 +70,43 @@ app.post('/Hospede', upload.single('foto'), async (req, res) => {
   }
 });
 
+app.put('/alterarReserva', async (req, res) => {
+  // Desestruturando os dados enviados pelo frontend
+  const {
+      n_quarto_novo, cpf_hospede_novo, data_entrada_novo, data_saida_novo, 
+      n_quarto_antigo, cpf_hospede_antigo, data_entrada_antigo, data_saida_antigo
+  } = req.body;
+
+  try {
+      // Atualizando os dados na tabela 'reserva'
+      const resultado = await currentUser.query(
+          `UPDATE reserva SET 
+              n_quarto = $1, 
+              cpf_hospede = $2, 
+              data_entrada = $3, 
+              data_saida = $4 
+          WHERE 
+              n_quarto = $5 AND 
+              cpf_hospede = $6 AND 
+              data_entrada = $7 AND 
+              data_saida = $8 
+          RETURNING *;`,
+          [
+              n_quarto_novo, cpf_hospede_novo, data_entrada_novo, data_saida_novo, 
+              n_quarto_antigo, cpf_hospede_antigo, data_entrada_antigo, data_saida_antigo
+          ]
+      );
+      
+      // Respondendo com os dados atualizados
+      res.json(resultado.rows[0]);
+  } catch (err) {
+      console.error('Erro ao atualizar a reserva:', err);
+      res.status(500).send('Erro ao atualizar a reserva.');
+  }
+});
+
+
+
 app.get('/reservas', async (req, res) => {
   if (!currentUser) {
     return res.status(401).json({ error: 'Usuário não autenticado.' });
@@ -154,6 +191,23 @@ app.post('/quartos_disponiveis', async (req, res) => {
 
 
 
+
+
+
+app.post('/criar_reserva', async (req, res) => {
+  const { data_entrada, data_saida, n_quarto, cpf_hospede } = req.body;
+
+  try {
+      const result = await currentUser.query(
+          'INSERT INTO reserva (data_entrada, data_saida, n_quarto, cpf_hospede) VALUES ($1, $2, $3, $4)',
+          [data_entrada, data_saida, n_quarto, cpf_hospede]
+      );
+      res.status(201).send({ message: 'Reserva criada com sucesso!' });
+  } catch (error) {
+      console.error('Erro ao inserir reserva:', error);
+      res.status(500).send({ error: 'Erro ao criar reserva. Tente novamente.' });
+  }
+});
 
 app.post('/BuscaCPF', async (req, res) => {
   if (!currentUser) {
