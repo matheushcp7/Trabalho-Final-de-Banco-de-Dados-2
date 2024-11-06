@@ -283,6 +283,40 @@ app.delete('/reservas', async (req, res) => {
   }
 });
 
+app.get('/pagamentos', async (req, res) => {
+  try {
+      const result = await currentUser.query('SELECT cod_pagamento, data_pagamento, metodo_pagamento, valor, tipo_documento, encode(nota_fiscal, \'base64\') AS nota_fiscal FROM pagamento');
+      const pagamentos = result.rows;
+      res.json(pagamentos);
+  } catch (error) {
+      console.error('Erro ao buscar pagamentos:', error);
+      res.status(500).json({ error: 'Erro ao buscar pagamentos.' });
+  }
+});
+
+
+
+app.post('/pagamento', upload.single('nota_fiscal'), async (req, res) => {
+  const { cod_pagamento, data_pagamento, metodo_pagamento, valor, tipo_documento } = req.body;
+  const notaFiscal = req.file ? req.file.buffer : null; // Obter o arquivo binário da nota fiscal
+
+  if (!cod_pagamento || !data_pagamento || !metodo_pagamento || !valor || !notaFiscal || !tipo_documento) {
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+  }
+
+  try {
+      // Inserir no banco de dados (exemplo de inserção utilizando PostgreSQL)
+      const result = await currentUser.query(
+          'INSERT INTO pagamento (cod_pagamento, data_pagamento, metodo_pagamento, valor, nota_fiscal, tipo_documento) VALUES ($1, $2, $3, $4, $5, $6)',
+          [cod_pagamento, data_pagamento, metodo_pagamento, valor, notaFiscal, tipo_documento]
+      );
+      
+      res.status(200).json({ message: 'Pagamento cadastrado com sucesso!' });
+  } catch (error) {
+      console.error('Erro ao cadastrar pagamento:', error);
+      res.status(500).json({ error: 'Erro ao cadastrar pagamento.' });
+  }
+});
 
 
 app.listen(port, () => {

@@ -46,32 +46,23 @@
 
         <!-- Conteúdo principal em cima da overlay -->
         <div class="container position-relative text-white z-index-2 pt-5">
-            <button onclick="window.location.href='criar_reserva.html';">Criar Reserva</button>
-            <div class="text-center mt-5">
-                <h2 class="text-white">Lista de Reservas</h2>
-                <!-- Tabela para exibir reservas -->
-                <div class="table-responsive">
-                    <table class="table table-bordered table-white">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Quarto</th>
-                                <th>CPF do Hóspede</th>
-                                <th>Data de Entrada</th>
-                                <th>Data de Saída</th>
-                                <th>Excluir</th>
-                                <th>Alterar</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody id="lista-reservas">
-                            <!-- Reservas serão inseridas aqui via JavaScript -->
-                            <div id="divError">
-                                <h1 id="error-message"></h1>
-                            </div>
-                        </tbody>
-                    </table>
-                </div>
-
+            <button onclick="window.location.href='criar_pagamento.html';">Criar pagamento</button>
+            <div class="container mt-5 w-75">
+                <h2>Pagamentos Cadastrados</h2>
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Código do Pagamento</th>
+                            <th>Data de Pagamento</th>
+                            <th>Método de Pagamento</th>
+                            <th>Valor</th>
+                            <th>Nota Fiscal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pagamentosList">
+                        <!-- Os dados dos pagamentos serão inseridos aqui -->
+                    </tbody>
+                </table>
             </div>
 
             <footer class="text-center bg-dark text-white mt-5">
@@ -81,6 +72,6 @@
         </div>
     </div>
 </body>
-<script src="controleReservas.js"></script>
+<script src="crudPagamento.js"></script>
 
 </html>
