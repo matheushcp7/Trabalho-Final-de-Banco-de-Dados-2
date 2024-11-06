@@ -127,6 +127,31 @@ app.get('/reservas', async (req, res) => {
   }
 });
 
+
+app.get('/proximosEventos', async (req, res) => {
+  if (!currentUser) {
+    return res.status(401).json({ error: 'Usuário não autenticado.' });
+  }
+
+  try {
+    console.log("Buscando eventos futuros...");
+    const result = await currentUser.query(`
+      SELECT id_evento, nome_evento, data_evento, custos, localizacao, numeroparticipantes, capacidade_evento, tema_evento 
+      FROM eventos
+      WHERE data_evento > current_date
+    `);
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Erro ao procurar eventos:", error);
+
+    if (error.code === '42501') {
+      return res.status(403).json({ error: 'Você não tem permissão para acessar essa aba.' });
+    }
+
+    res.status(500).json({ error: 'Erro ao processar a solicitação.', details: error.message });
+  }
+});
+
 app.get('/cardapio', async (req, res) => {
   if (!currentUser) {
     return res.status(401).json({ error: 'Usuário não autenticado.' });
