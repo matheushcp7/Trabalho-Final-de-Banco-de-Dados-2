@@ -17,13 +17,13 @@ document.getElementById('BuscaCPF').addEventListener('submit', async function(ev
         if (response.ok) {
             const data = await response.json();
 
-            if (data && data.nome) { // Verifica se 'data' contém os dados esperados
+            if (data && data.nome_hosp) { // Verifica se 'data' contém os dados esperados
+                
                 document.getElementById('profileContainer').style.display = 'block';
-                document.getElementById('profileName').innerText = 'Nome: ' + data.nome;
-                document.getElementById('profileCpf').innerText = 'CPF: ' + data.cpf;
+                document.getElementById('profileName').innerText = 'Nome: ' + data.nome_hosp;
+                document.getElementById('profileCpf').innerText = 'CPF: ' + data.cpf_hosp;
                 document.getElementById('profileTelefone').innerText = 'Telefone: ' + data.telefone;
                 document.getElementById('profileEmail').innerText = 'Email: ' + data.email;
-                document.getElementById('profileSenha').innerText = 'Senha: ' + data.senha;
                 document.getElementById('profileEspecie').innerText = 'Espécie: ' + data.especie;
                 document.getElementById('profileEstagio').innerText = 'Estágio de Vida: ' + data.estagio_de_vida;
 

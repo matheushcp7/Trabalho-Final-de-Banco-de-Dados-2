@@ -214,29 +214,28 @@ app.post('/BuscaCPF', async (req, res) => {
     return res.status(401).json({ error: 'Usuário não autenticado.' });
   }
 
-  const { cpf } = req.body;
-  console.log("Buscando hóspede com CPF:", cpf);
-
+  const { cpf } = req.body; // Recebe o CPF do corpo da requisição
+  
   try {
     const result = await currentUser.query('SELECT * FROM hospede WHERE cpf_hosp = $1', [cpf]);
     
     if (result.rows.length === 0) {
-      console.warn("Hóspede não encontrado no banco de dados.");
       return res.status(404).json({ error: 'Hóspede não encontrado no servidor.' });
     }
 
     const hospede = result.rows[0];
     
+    // Se houver uma foto, converte o campo 'foto' de BYTEA para Base64
     if (hospede.foto) {
       hospede.foto = `data:${hospede.tipo_foto};base64,${hospede.foto.toString('base64')}`;
     }
 
+    res.json(hospede); // Retorna os dados do hóspede, incluindo a foto em formato Base64
     console.log("Hóspede encontrado:", hospede);
-    res.json(hospede);
 
   } catch (error) {
-    console.error("Erro ao procurar hóspede:", error.message);
-    res.status(500).json({ error: 'Erro ao processar a solicitação.', details: error.message });
+    console.error('Erro ao procurar hóspede:', error.message);
+    res.status(500).json({ error: 'Você não tem permissão para fazer isso, se tentar novamente sofrerá com as consequencias', details: error.message });
   }
 });
 
