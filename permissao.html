@@ -38,8 +38,8 @@
                             href="relatorioMensal.html">Relatorio mensal</a></li>
                     <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="eventosFuncionarios.html">Eventos de funcionarios</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" aria-current="page"
-                                href="permissao.html">Permissões</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="permissao.html">Permissões</a></li>
                 </ul>
             </div>
         </div>
@@ -55,22 +55,17 @@
         <!-- Conteúdo principal em cima da overlay -->
         <div class="container position-relative text-white z-index-2 pt-5">
             <div class="text-center mt-5">
-                <h2 class="text-white">Hospedes Mortos:</h2>
+                <h2 class="text-white bg-dark rounded border-black"><u>Permissões dos usuarios</u></h2>
                 <!-- Tabela para exibir reservas -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-white">
                         <thead class="table-dark">
                             <tr>
-                                <th>cpf_hosp</th>
-                                <th>nome_hosp</th>
-                                <th>telefone</th>
-                                <th>email</th>
-                                <th>estagio_de_vida</th>
-                                <th>especie</th>
-                                
+                                <th>tabela</th>
+                                <th>Permissões</th>
                             </tr>
                         </thead>
-                        <tbody id="lista-mortos">
+                        <tbody id="lista-permissao">
                             <!-- Reservas serão inseridas aqui via JavaScript -->
                             <div id="divError">
                                 <h1 id="error-message"></h1>
@@ -88,6 +83,6 @@
         </div>
     </div>
 </body>
-<script src="mostrarHospedesMortos.js"></script>
+<script src="permissao.js"></script>
 
 </html>

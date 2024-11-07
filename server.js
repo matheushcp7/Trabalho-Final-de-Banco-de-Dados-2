@@ -138,6 +138,29 @@ app.get('/eventosFuncionarios', async (req, res) => {
 });
 
 
+
+app.get('/permissoes', async (req, res) => {
+  try {
+      // Consultar permissões das tabelas associadas ao usuário 'secretaria'
+      const query = `
+          SELECT c.relname AS table,
+                 c.relacl AS permissions
+          FROM pg_class c
+          JOIN pg_namespace n ON n.oid = c.relnamespace
+          JOIN pg_roles r ON r.oid = c.relowner
+          WHERE r.rolname = 'secretaria' OR c.relacl::text LIKE '%secretaria%';
+      `;
+      
+      const result = await currentUser.query(query);
+      
+      // Enviar a resposta com os dados das permissões
+      res.json(result.rows);
+  } catch (err) {
+      console.error("Erro na consulta de permissões:", err);
+      res.status(500).json({ error: 'Erro ao consultar permissões' });
+  }
+});
+
 app.get('/proximosEventos', async (req, res) => {
   if (!currentUser) {
     return res.status(401).json({ error: 'Usuário não autenticado.' });
