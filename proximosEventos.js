@@ -51,25 +51,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Função para excluir reserva
-function excluirReserva(data_saida, data_entrada, n_quarto, cpf_hosp) {
+function excluirEvento(id_evento) {
     if (confirm('Tem certeza que deseja excluir esta reserva?')) {
-        fetch('http://localhost:3000/reservas', {
+        fetch('http://localhost:3000/evento', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ data_saida, data_entrada, n_quarto, cpf_hosp }),
+            body: JSON.stringify({ id_evento }),
         })
         .then(response => {
             if (response.ok) {
-                alert('Reserva excluída com sucesso!');
+                alert('Evento excluído com sucesso!');
                 window.location.reload(); // Recarrega a página para atualizar a lista de reservas
             } else {
-                alert('Erro ao excluir reserva.');
+                alert('Erro ao excluir evento.');
             }
         })
         .catch(error => {
-            console.error('Erro ao excluir reserva:', error);
+            console.error('Erro ao excluir evento:', error);
         });
     }
 }

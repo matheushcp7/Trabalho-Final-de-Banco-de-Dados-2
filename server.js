@@ -321,6 +321,94 @@ app.post('/BuscaCPF', async (req, res) => {
   }
 });
 
+app.post('/cadastrar_secretaria', async (req, res) => {
+  const { nome, senha } = req.body;
+
+  if (!nome || !senha) {
+    return res.status(400).json({ error: 'Nome e senha são obrigatórios' });
+  }
+
+  try {
+    // Criptografa a senha antes de salvar no banco
+    const hashedPassword = await bcrypt.hash(senha, 10);
+
+    // Cria o usuário com as permissões no banco de dados
+    await currentUser.query(`
+      CREATE USER ${nome} WITH
+      LOGIN
+      PASSWORD '${hashedPassword}';
+      GRANT secretarias TO ${nome};
+      ALTER ROLE ${nome} CREATEROLE;
+    `);
+
+    res.status(201).json({ message: 'Secretária cadastrada com sucesso!' });
+  } catch (error) {
+    console.error('Erro ao cadastrar secretária:', error);
+    res.status(500).json({ error: 'Erro ao cadastrar secretária.' });
+  }
+});
+
+// Rota para criar um evento
+app.post('/criar_evento', async (req, res) => {
+  const { id_evento, nome_evento, data_evento, custos, localizacao, numeroparticipantes, capacidade_evento, tema_evento } = req.body;
+
+  // Verificação dos dados recebidos
+  if (!id_evento || !nome_evento || !data_evento || numeroparticipantes == null || capacidade_evento == null || !tema_evento) {
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+  }
+
+  try {
+      // Inserindo o evento na tabela 'eventos'
+      const query = `
+          INSERT INTO public.eventos (
+              id_evento, nome_evento, data_evento, custos, localizacao, numeroparticipantes, capacidade_evento, tema_evento
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          RETURNING *;
+      `;
+      
+      const values = [id_evento, nome_evento, data_evento, custos, localizacao, numeroparticipantes, capacidade_evento, tema_evento];
+
+      const result = await currentUser.query(query, values);
+      
+      // Enviando resposta de sucesso com os dados do evento inserido
+      res.status(201).json({ success: true, evento: result.rows[0], message: 'Evento criado com sucesso!' });
+  } catch (error) {
+      console.error("Erro ao criar evento:", error.message);
+
+      // Retornando erro em caso de problemas no banco de dados
+      res.status(500).json({ success: false, error: 'Erro ao inserir evento no banco de dados.', details: error.message });
+  }
+});
+
+
+
+app.delete('/evento', async (req, res) => {
+  const { id_evento } = req.body;
+  if (!currentUser) {
+    return res.status(401).json({ error: 'Usuário não autenticado.' });
+  }
+
+  try {
+    console.log("Excluindo evento:", {id_evento});
+    await currentUser.query(
+      'DELETE FROM participa WHERE idevento = $1;',
+      [id_evento]
+    );
+    await currentUser.query(
+      'DELETE FROM organiza WHERE id_evento = $1;',
+      [id_evento]
+    );
+    await currentUser.query(
+      'DELETE FROM eventos WHERE id_evento = $1;',
+      [id_evento]
+    );
+    res.status(204).send();
+  } catch (error) {
+    console.error("Erro ao excluir evento:", error.message);
+    res.status(500).json({ error: 'Erro ao excluir evento.', details: error.message });
+  }
+});
+
 app.delete('/reservas', async (req, res) => {
   const { data_saida, data_entrada, n_quarto, cpf_hosp } = req.body;
   if (!currentUser) {
