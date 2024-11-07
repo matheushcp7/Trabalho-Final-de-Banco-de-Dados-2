@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Iniciando o carregamento do cardápio.");
+    console.log("Iniciando o carregamento do relatório de caixa.");
 
-    fetch('http://localhost:3000/cardapio')
+    fetch('http://localhost:3000/relatorio_caixa_mensal')
         .then(response => {
             console.log("Resposta do servidor recebida:", response);
             if (!response.ok) {
@@ -10,17 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            const listaCardapio = document.getElementById('lista-cardapio');
+            const listaMensal = document.getElementById('lista-mensal');
 
-            data.forEach(cardapio => {
+            data.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${cardapio.prato}</td>
-                    <td>${cardapio.ingrediente}</td>
-                    <td>${formatarPreco(cardapio.preco)}</td>
-                    <td>${cardapio.fornecedor}</td>
+                    <td>${item.total}</td>
+                    <td>${item.tipo}</td>
                 `;
-                listaCardapio.appendChild(tr);
+                listaMensal.appendChild(tr);
             });
         })
         .catch(error => {
@@ -39,7 +37,3 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 });
-
-function formatarPreco(preco) {
-    return `R$ ${preco}`;
-}

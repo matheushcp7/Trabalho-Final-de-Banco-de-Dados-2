@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="Cadastro.css">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-md fixed-top" style="background-color: #4a0e87;">
         <div class="container-fluid">
@@ -21,20 +23,27 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="controleReservas.html">Reservas</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="proximosEventos.html">Próximos eventos</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="proximosEventos.html">Próximos eventos</a>
+                    </li>
                     <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="Cardapio.html">Cardapio</a></li>
                     <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="Cadastro.html">Cadastro</a></li>
                     <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="CrudHospede.html">Hospedes</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="crudPagamento.html">Pagamentos</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="mostrarHospedesMortos.html">Hospedes Mortos</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="relatorioMensal.html">Relatorio mensal</a></li>
+                            <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                                href="eventosFuncionarios.html">Eventos de funcionarios</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    
+
     <div class="container mt-5 w-75">
         <h2>Cadastro de Hóspede</h2>
         <form class="mt-5" id="hospedeForm" action="#" method="post" enctype="multipart/form-data">
@@ -88,14 +97,16 @@
                     <button class="cadastroButton btn btn-primary w-100" type="submit">Cadastrar</button>
                 </div>
                 <div class="col-md-6">
-                    <button class="cadastroButton btn btn-secondary w-100" type="button" onclick="window.location.href='PaginaSecretaria.html'">Voltar</button>
+                    <button class="cadastroButton btn btn-secondary w-100" type="button"
+                        onclick="window.location.href='PaginaSecretaria.html'">Voltar</button>
                 </div>
             </div>
         </form>
     </div>
-    
-    
-    
+
+
+
     <script src="Cadastro.js"></script>
 </body>
+
 </html>

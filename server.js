@@ -127,6 +127,16 @@ app.get('/reservas', async (req, res) => {
   }
 });
 
+app.get('/eventosFuncionarios', async (req, res) => {
+  try {
+      const result = await currentUser.query('SELECT codigo_evento, nome_evento, data, local, capacidade, organizador, participante FROM  visao_eventos_programados;');
+      res.json(result.rows);
+  } catch (error) {
+      console.error("Erro ao buscar próximos eventos:", error);
+      res.status(500).json({ error: 'Erro ao processar a solicitação.', details: error.message });
+  }
+});
+
 
 app.get('/proximosEventos', async (req, res) => {
   if (!currentUser) {
@@ -160,8 +170,11 @@ app.get('/cardapio', async (req, res) => {
   console.log("Requisição para obter o cardápio recebida.");
   
   try {
-    const result = await currentUser.query('SELECT * FROM cardapio');
+    console.log("Tentou fazer a busca")
+    const result = await currentUser.query('SELECT * FROM visao_cardapio_completo');
+    console.log(result);
     res.json(result.rows);
+    
   } catch (error) {
     console.error("Erro ao procurar cardápio:", error);
 
@@ -214,8 +227,29 @@ app.post('/quartos_disponiveis', async (req, res) => {
   }
 });
 
+app.get('/hospedes_mortos', async (req, res) => {
+  try {
+      const result = await currentUser.query(`
+          SELECT cpf_hosp, nome_hosp, telefone, email, estagio_de_vida, especie 
+          FROM hospedes_mortos
+      `);
+      res.json(result.rows);
+  } catch (error) {
+      console.error("Erro ao buscar hóspedes mortos:", error);
+      res.status(500).json({ error: 'Erro ao processar a solicitação.', details: error.message });
+  }
+});
 
 
+app.get('/relatorio_caixa_mensal', async (req, res) => {
+  try {
+      const result = await currentUser.query('SELECT * FROM relatorio_mes');
+      res.json(result.rows);
+  } catch (error) {
+      console.error("Erro ao buscar o relatório de caixa mensal:", error);
+      res.status(500).json({ error: 'Erro ao processar a solicitação.', details: error.message });
+  }
+});
 
 
 

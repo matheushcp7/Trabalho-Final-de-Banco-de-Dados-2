@@ -1,26 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Iniciando o carregamento do cardápio.");
+    console.log("Carregando a lista de hóspedes mortos.");
 
-    fetch('http://localhost:3000/cardapio')
+    fetch('http://localhost:3000/hospedes_mortos')
         .then(response => {
-            console.log("Resposta do servidor recebida:", response);
             if (!response.ok) {
                 throw new Error(`Erro HTTP: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            const listaCardapio = document.getElementById('lista-cardapio');
-
-            data.forEach(cardapio => {
+            const listaMortos = document.getElementById('lista-mortos');
+            
+            data.forEach(hospede => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${cardapio.prato}</td>
-                    <td>${cardapio.ingrediente}</td>
-                    <td>${formatarPreco(cardapio.preco)}</td>
-                    <td>${cardapio.fornecedor}</td>
+                    <td>${hospede.cpf_hosp}</td>
+                    <td>${hospede.nome_hosp}</td>
+                    <td>${hospede.telefone}</td>
+                    <td>${hospede.email}</td>
+                    <td>${hospede.estagio_de_vida}</td>
+                    <td>${hospede.especie}</td>
                 `;
-                listaCardapio.appendChild(tr);
+                listaMortos.appendChild(tr);
             });
         })
         .catch(error => {
@@ -39,7 +40,3 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 });
-
-function formatarPreco(preco) {
-    return `R$ ${preco}`;
-}
