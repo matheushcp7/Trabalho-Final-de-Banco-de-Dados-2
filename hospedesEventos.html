@@ -52,31 +52,31 @@
 
         <!-- Conteúdo principal em cima da overlay -->
         <div class="container position-relative text-white z-index-2 pt-5">
-            <button onclick="window.location.href='criar_evento.html';">Criar Evento</button>
-            <button onclick="window.location.href='eventosFuncionarios.html';">Eventos de funcionarios</button>
-            <button onclick="window.location.href='hospedesEventos.html';">Ver hospedes em eventos</button>
             <div class="text-center mt-5">
-                <h2 class="text-white">Proximos Eventos</h2>
+                <h2 class="text-white"><u>Proximos Eventos</u></h2>
                 <!-- Tabela para exibir reservas -->
+
+                <div class="container text-center mt-2">
+                    <div class="input-group input-group-lg mb-2" style="max-width: 600px; margin: 0 auto;">
+                        <span class="input-group-text text-white bg-dark">Buscar evento:</span>
+                        <input type="number" id="id-evento" class="form-control" placeholder="ID do evento" required>
+                        <button id="buscar-hospedes" class="btn btn-primary">Buscar</button>
+                    </div>
+                </div>
+                
+                
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-white">
                         <thead class="table-dark">
                             <tr>
-                                <th>id</th>
+                                <th>cpf</th>
                                 <th>nome</th>
-                                <th>data</th>
-                                <th>custos</th>
-                                <th>Localização</th>
-                                <th>numeroParticipantes</th>
-                                <th>capacidade</th>
-                                <th>tema</th>
-                                <th>excluir</th>
-                                <th>alterar</th>
-                                <th>+hospede</th>
-                                
+                                <th>telefone</th>
+                                <th>email</th>
                             </tr>
                         </thead>
-                        <tbody id="lista-eventos">
+                        <tbody id="lista-hospedes">
                             <!-- Reservas serão inseridas aqui via JavaScript -->
                             <div id="divError">
                                 <h1 id="error-message"></h1>
@@ -94,6 +94,6 @@
         </div>
     </div>
 </body>
-<script src="proximosEventos.js"></script>
+<script src="hospedesEventos.js"></script>
 
 </html>

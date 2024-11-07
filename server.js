@@ -137,6 +137,53 @@ app.get('/eventosFuncionarios', async (req, res) => {
   }
 });
 
+app.post('/adicionarHospede', async (req, res) => {
+  const { id_evento, cpf_hospede } = req.body;
+
+  if (!id_evento || !cpf_hospede) {
+      return res.status(400).json({ error: "ID do evento e CPF do hóspede são obrigatórios" });
+  }
+
+  try {
+      const query = `
+          INSERT INTO participa (idevento, cpfhosp)
+          VALUES ($1, $2)
+          ON CONFLICT (idevento, cpfhosp) DO NOTHING
+      `;
+
+      await currentUser.query(query, [id_evento, cpf_hospede]);
+
+      res.status(200).json({ message: "Hóspede adicionado ao evento com sucesso!" });
+  } catch (error) {
+      console.error("Erro ao inserir hóspede no evento:", error);
+      res.status(500).json({ error: "Erro ao inserir hóspede no evento." });
+  }
+});
+
+
+app.post('/listarHospedesEvento', async (req, res) => {
+  const { id_evento } = req.body;
+
+  if (!id_evento) {
+      return res.status(400).json({ error: 'ID do evento é necessário' });
+  }
+
+  try {
+      // Chama a função listar_hospedes_evento do PostgreSQL
+      const query = `SELECT * FROM listar_hospedes_evento($1)`;
+      const { rows } = await currentUser.query(query, [id_evento]);
+
+      if (rows.length === 0) {
+          return res.status(404).json({ error: 'Nenhum hóspede encontrado para este evento' });
+      }
+
+      res.json(rows);
+  } catch (error) {
+      console.error('Erro ao buscar hóspedes:', error);
+      res.status(500).json({ error: 'Erro no servidor ao buscar hóspedes' });
+  }
+});
+
 
 
 app.get('/permissoes', async (req, res) => {

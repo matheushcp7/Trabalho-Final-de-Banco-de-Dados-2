@@ -31,6 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>
                         <button onclick="alterarEvento(${evento.id_evento})" class="btn btn-primary">Alterar</button>
                     </td>
+                    <td>
+                        <label for="hospede-evento" class="form-label text-white"></label>
+                        <input type="text" class="form-control" id="hospede-evento" name="hospede_evento" required>
+                    </td>
+                                
+                    <td>
+                        <button onclick="adicionarHospede(document.getElementById('hospede-evento').value, ${evento.id_evento})" class="btn btn-primary">Adicionar Hóspede</button>
+
+                    </td>
                 `;
                 listaEventos.appendChild(tr);
             });
@@ -49,6 +58,44 @@ document.addEventListener('DOMContentLoaded', () => {
             divError.style.backgroundColor = '#ffffff';
         });
 });
+
+
+function adicionarHospede(cpfHospede, idEvento) {
+    // Verifica se o CPF foi digitado
+    if (!cpfHospede) {
+        alert("Por favor, digite o CPF do hóspede.");
+        return;
+    }
+
+    // Cria o corpo da requisição
+    const body = {
+        cpf_hospede: cpfHospede,
+        id_evento: idEvento
+    };
+
+    // Envia os dados para o servidor
+    fetch('http://localhost:3000/adicionarHospede', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Hóspede adicionado com sucesso!');
+        } else {
+            alert('Erro ao adicionar hóspede.');
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao adicionar hóspede:', error);
+        alert('Erro ao adicionar hóspede.');
+    });
+}
+
+
+
 
 // Função para excluir reserva
 function excluirEvento(id_evento) {
