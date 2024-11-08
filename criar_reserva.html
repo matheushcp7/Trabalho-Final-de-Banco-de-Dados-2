@@ -36,8 +36,14 @@
                             href="mostrarHospedesMortos.html">Hospedes Mortos</a></li>
                     <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="relatorioMensal.html">Relatorio mensal</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" aria-current="page"
-                                href="permissao.html">Permissões</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="permissao.html">Permissões</a></li>
+
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="criarSecretaria.html">Cadastrar secretaria</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="matarSecretaria.html">Matar secretaria</a></li>
+
                 </ul>
             </div>
         </div>
@@ -53,6 +59,8 @@
                     <div class="col-md-6"> <!-- Define a largura da coluna -->
                         <form id="form-reserva" class="mb-4 bg-dark ps-2 pb-2 rounded border-dark">
                             <h3 class="text-white">Cadastrar Reservas</h3>
+                            
+                            <!-- Dados da Reserva -->
                             <div class="mb-3 me-3">
                                 <label for="data-entrada" class="form-label text-white">Data de Entrada:</label>
                                 <input type="date" class="form-control" id="data_entrada" name="data_entrada" required>
@@ -63,18 +71,37 @@
                             </div>
                             <div class="mb-3 me-3">
                                 <label for="cpf-hospede" class="form-label text-white">CPF do Hóspede:</label>
-                                <input type="text" class="form-control" id="cpf-hospede" name="cpf_hospede" required>
+                                <input type="text" class="form-control" id="cpf_hospede" name="cpf_hospede" required>
                             </div>
                             <div class="mb-3 me-3">
                                 <label for="n-quarto" class="form-label text-white">Número do Quarto:</label>
-                                <input type="text" class="form-control" id="n-quarto" name="n_quarto" required>
+                                <input type="text" class="form-control" id="n_quarto" name="n_quarto" required>
                             </div>
-                            <button type="button" class="btn btn-primary" onclick="criarReserva()">Fazer
-                                Reserva</button>
+                            
+                            <!-- Dados do Pagamento -->
+                            <div class="mb-3 me-3">
+                                <label for="cod-pagamento" class="form-label text-white">Código do Pagamento:</label>
+                                <input type="number" class="form-control" id="cod_pagamento" name="cod_pagamento" required>
+                            </div>
+                            <div class="mb-3 me-3">
+                                <label for="metodo-pagamento" class="form-label text-white">Método de Pagamento:</label>
+                                <select class="form-control" id="metodo_pagamento" name="metodo_pagamento" required>
+                                    <option value="Cartão">Cartão</option>
+                                    <option value="Dinheiro">Dinheiro</option>
+                                    <option value="Pix">Pix</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 me-3">
+                                <label for="valor" class="form-label text-white">Valor do Pagamento:</label>
+                                <input type="number" step="0.0" class="form-control" id="valor" name="valor" required>
+                            </div>
+                            
+                            <button type="button" class="btn btn-primary" onclick="criarReserva()">Fazer Reserva</button>
                         </form>
                     </div>
                 </div>
             </div>
+            
             <div class="bg-dark rounded border-dark mb-2">
                 <h1> Quartos Disponíveis</h1>
                 <form id="form-pesquisa" class="mb-4">

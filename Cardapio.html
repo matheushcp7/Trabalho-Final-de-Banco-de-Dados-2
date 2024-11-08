@@ -36,8 +36,14 @@
                             href="mostrarHospedesMortos.html">Hospedes Mortos</a></li>
                     <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="relatorioMensal.html">Relatorio mensal</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" aria-current="page"
-                                href="permissao.html">Permissões</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="permissao.html">Permissões</a></li>
+
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="criarSecretaria.html">Cadastrar secretaria</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="matarSecretaria.html">Matar secretaria</a></li>
+
                 </ul>
             </div>
         </div>
@@ -54,18 +60,24 @@
         <div class="container position-relative text-white z-index-2 pt-5">
 
             <div class="text-center mt-5">
+                <div class="text-start">
+                    <button class="btn btn-primary" onclick="location.href='produtos_cardapio_estoque.html'">Ver
+                        Produtos do Cardápio em Estoque</button>
+                </div>
+
+
                 <h2 class="text-dark"><u>CARDAPIO<u></h2>
                 <!-- Tabela para exibir reservas -->
                 <div class="table-responsive">
                     <table class="table table-bordered table-white">
                         <thead class="table-dark">
                             <tr>
-                                
+
                                 <th>Nome do Prato</th>
                                 <th>Descrição</th>
                                 <th>Preço</th>
-                                <th>Fornecedor</th>
-                                
+                                <th>Numero do prato</th>
+
                             </tr>
                         </thead>
                         <tbody id="lista-cardapio">
@@ -76,6 +88,8 @@
                         </tbody>
                     </table>
                 </div>
+
+
 
             </div>
 

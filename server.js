@@ -114,7 +114,7 @@ app.get('/reservas', async (req, res) => {
 
   try {
     console.log("Buscando reservas...");
-    const result = await currentUser.query('SELECT * FROM reserva');
+    const result = await currentUser.query('SELECT * FROM reserva ORDER BY data_entrada ASC, data_saida ASC');
     res.json(result.rows);
   } catch (error) {
     console.error("Erro ao procurar reservas:", error);
@@ -129,7 +129,7 @@ app.get('/reservas', async (req, res) => {
 
 app.get('/eventosFuncionarios', async (req, res) => {
   try {
-      const result = await currentUser.query('SELECT codigo_evento, nome_evento, data, local, capacidade, organizador, participante FROM  visao_eventos_programados;');
+      const result = await currentUser.query('SELECT codigo_evento, nome_evento, data, local, capacidade, organizador, participante FROM  visao_eventos_programados ORDER BY data ASC;');
       res.json(result.rows);
   } catch (error) {
       console.error("Erro ao buscar próximos eventos:", error);
@@ -161,6 +161,64 @@ app.post('/adicionarHospede', async (req, res) => {
 });
 
 
+app.put('/alterarEvento', async (req, res) => {
+  try {
+      const {
+          id_evento, 
+          nome_evento_novo, 
+          data_evento_novo, 
+          custos_novo, 
+          localizacao_novo,
+          numeroParticipantes_novo,
+          capacidade_evento_novo,
+          tema_evento_novo
+      } = req.body;
+
+      // Verificar se o ID do evento está presente
+      if (!id_evento) {
+          return res.status(400).json({ error: 'ID do evento é obrigatório' });
+      }
+
+      // Atualizar os dados do evento na tabela
+      const query = `
+          UPDATE eventos
+          SET nome_evento = $1,
+              data_evento = $2,
+              custos = $3,
+              localizacao = $4,
+              numeroparticipantes = $5,
+              capacidade_evento = $6,
+              tema_evento = $7
+          WHERE id_evento = $8
+      `;
+
+      const values = [
+          nome_evento_novo,
+          data_evento_novo,
+          custos_novo,
+          localizacao_novo,
+          numeroParticipantes_novo,
+          capacidade_evento_novo,
+          tema_evento_novo,
+          id_evento
+      ];
+
+      const result = await currentUser.query(query, values);
+
+      // Verificar se o evento foi atualizado
+      if (result.rowCount === 0) {
+          return res.status(404).json({ error: 'Evento não encontrado' });
+      }
+
+      res.status(200).json({ message: 'Evento atualizado com sucesso' });
+  } catch (error) {
+      console.error('Erro ao atualizar o evento:', error);
+      res.status(500).json({ error: 'Erro ao atualizar o evento' });
+  }
+});
+
+
+
 app.post('/listarHospedesEvento', async (req, res) => {
   const { id_evento } = req.body;
 
@@ -170,7 +228,7 @@ app.post('/listarHospedesEvento', async (req, res) => {
 
   try {
       // Chama a função listar_hospedes_evento do PostgreSQL
-      const query = `SELECT * FROM listar_hospedes_evento($1)`;
+      const query = `SELECT * FROM listar_hospedes_evento($1) ORDER BY nome_hosp ASC`;
       const { rows } = await currentUser.query(query, [id_evento]);
 
       if (rows.length === 0) {
@@ -184,6 +242,69 @@ app.post('/listarHospedesEvento', async (req, res) => {
   }
 });
 
+function sanitizeUserName(name) {
+  // A função pode ser mais robusta dependendo do seu caso, aqui estamos apenas checando se o nome é uma string válida
+  return name && typeof name === 'string' && name.length > 0;
+}
+
+// Rota para matar (excluir) a secretária
+app.post('/matarSecretaria', async (req, res) => {
+  const { nome } = req.body;
+
+  if (!sanitizeUserName(nome)) {
+      return res.status(400).json({ error: 'Nome da secretária inválido.' });
+  }
+
+  try {
+      // Inicia a transação
+      await currentUser.query('BEGIN');
+
+      // Revogar permissões concedidas à secretária
+      await currentUser.query(`
+          REVOKE ALL PRIVILEGES ON TABLE hospede, reserva, cardapio, eventos, participa, quarto, pagamento, hospedes_mortos, relatorio_mes, visao_eventos_programados FROM ${nome};
+      `);
+
+      // Revogar permissão de execução de funções e procedimentos
+      await currentUser.query(`
+          REVOKE EXECUTE ON PROCEDURE alterar_datas_reserva FROM ${nome};
+          REVOKE EXECUTE ON FUNCTION quartos_disponiveis FROM ${nome};
+      `);
+
+      // Revogar a associação da secretária à role 'secretarias'
+      await currentUser.query(`
+          REVOKE secretarias FROM ${nome};
+      `);
+
+      // Remover o usuário 'secretaria' do banco de dados
+      await currentUser.query(`
+          DROP USER IF EXISTS ${nome};
+      `);
+
+      // Finaliza a transação
+      await currentUser.query('COMMIT');
+
+      return res.status(200).json({ message: 'Secretária excluída com sucesso!' });
+  } catch (error) {
+      // Caso ocorra um erro, desfaz a transação
+      await currentUser.query('ROLLBACK');
+        console.error('Erro ao excluir secretária:', error);
+        // Enviar o erro para o cliente
+        return res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/produtosEstoque', async (req, res) => {
+
+  try {
+      const result = await currentUser.query('SELECT * FROM visao_cardapio_completo');
+      
+      // Retorna os dados do cardápio
+      res.json(result.rows);
+  } catch (err) {
+      console.error('Erro ao buscar cardápio:', err);
+      res.status(500).json({ error: 'Erro ao carregar o cardápio.' });
+  }
+});
 
 
 app.get('/permissoes', async (req, res) => {
@@ -219,6 +340,7 @@ app.get('/proximosEventos', async (req, res) => {
       SELECT id_evento, nome_evento, data_evento, custos, localizacao, numeroparticipantes, capacidade_evento, tema_evento 
       FROM eventos
       WHERE data_evento > current_date
+      ORDER BY data_evento ASC, id_evento ASC;
     `);
     res.json(result.rows);
   } catch (error) {
@@ -238,13 +360,13 @@ app.get('/cardapio', async (req, res) => {
   }
 
   console.log("Requisição para obter o cardápio recebida.");
-  
+
   try {
     console.log("Tentou fazer a busca")
-    const result = await currentUser.query('SELECT * FROM visao_cardapio_completo');
+    const result = await currentUser.query('SELECT * FROM cardapio ORDER BY nome_item ASC;');
     console.log(result);
     res.json(result.rows);
-    
+
   } catch (error) {
     console.error("Erro ao procurar cardápio:", error);
 
@@ -278,7 +400,7 @@ app.post('/quartos_disponiveis', async (req, res) => {
       console.log("Executando consulta no banco de dados com as datas:", data_entrada, data_saida);
 
       // Verifique se currentUser.query está configurado corretamente para fazer consultas
-      const resultado = await currentUser.query('SELECT * FROM quartos_disponiveis($1, $2);', [data_entrada, data_saida]);
+      const resultado = await currentUser.query('SELECT * FROM quartos_disponiveis($1, $2) ORDER BY tema_quarto ASC;', [data_entrada, data_saida]);
       
       console.log("Consulta ao banco de dados concluída com sucesso:", resultado.rows);  // Log para verificar os resultados da consulta
 
@@ -324,17 +446,41 @@ app.get('/relatorio_caixa_mensal', async (req, res) => {
 
 
 app.post('/criar_reserva', async (req, res) => {
-  const { data_entrada, data_saida, n_quarto, cpf_hospede } = req.body;
+  const { data_entrada, data_saida, n_quarto, cpf_hospede, cod_pagamento, metodo_pagamento, valor } = req.body;
+
+  const client = await currentUser.connect(); // Obtém um cliente de conexão para iniciar a transação
 
   try {
-      const result = await currentUser.query(
+      await client.query('BEGIN'); // Inicia a transação
+
+      // Inserir uma nova reserva
+      await client.query(
           'INSERT INTO reserva (data_entrada, data_saida, n_quarto, cpf_hospede) VALUES ($1, $2, $3, $4)',
           [data_entrada, data_saida, n_quarto, cpf_hospede]
       );
+
+      // Atualizar o status do quarto
+      await client.query(
+          'UPDATE quarto SET status_limpeza = FALSE WHERE n_quarto = $1',
+          [n_quarto]
+      );
+
+      // Inserir registro de pagamento referente à reserva
+      await client.query(
+          'INSERT INTO pagamento (cod_pagamento, data_pagamento, metodo_pagamento, valor) VALUES ($1, CURRENT_DATE, $2, $3)',
+          [cod_pagamento, metodo_pagamento, valor]
+      );
+
+      await client.query('COMMIT'); // Confirma a transação
       res.status(201).send({ message: 'Reserva criada com sucesso!' });
+
   } catch (error) {
-      console.error('Erro ao inserir reserva:', error);
+      await client.query('ROLLBACK'); // Reverte a transação em caso de erro
+      console.error('Erro ao criar reserva:', error);
       res.status(500).send({ error: 'Erro ao criar reserva. Tente novamente.' });
+
+  } finally {
+      client.release(); // Libera o cliente
   }
 });
 
@@ -457,19 +603,38 @@ app.delete('/evento', async (req, res) => {
 });
 
 app.delete('/reservas', async (req, res) => {
-  const { data_saida, data_entrada, n_quarto, cpf_hosp } = req.body;
+  const { data_saida, data_entrada, n_quarto, cpf_hosp, cod_pagamento } = req.body;
+
   if (!currentUser) {
     return res.status(401).json({ error: 'Usuário não autenticado.' });
   }
 
   try {
-    console.log("Excluindo reserva:", { data_saida, data_entrada, n_quarto, cpf_hosp });
+    await currentUser.query('BEGIN');
+
+    // Excluir a reserva
     await currentUser.query(
       'DELETE FROM reserva WHERE data_saida = $1 AND data_entrada = $2 AND n_quarto = $3 AND cpf_hospede = $4',
       [data_saida, data_entrada, n_quarto, cpf_hosp]
     );
+
+    // Atualizar o status de limpeza do quarto
+    await currentUser.query(
+      'UPDATE quarto SET status_limpeza = TRUE WHERE n_quarto = $1',
+      [n_quarto]
+    );
+
+    // Excluir o pagamento associado
+    await currentUser.query(
+      'DELETE FROM pagamento WHERE cod_pagamento = $1',
+      [cod_pagamento]
+    );
+
+    await currentUser.query('COMMIT');
     res.status(204).send();
+
   } catch (error) {
+    await currentUser.query('ROLLBACK');  // Reverte a transação em caso de erro
     console.error("Erro ao excluir reserva:", error.message);
     res.status(500).json({ error: 'Erro ao excluir reserva.', details: error.message });
   }
@@ -477,7 +642,7 @@ app.delete('/reservas', async (req, res) => {
 
 app.get('/pagamentos', async (req, res) => {
   try {
-      const result = await currentUser.query('SELECT cod_pagamento, data_pagamento, metodo_pagamento, valor, tipo_documento, encode(nota_fiscal, \'base64\') AS nota_fiscal FROM pagamento');
+      const result = await currentUser.query('SELECT cod_pagamento, data_pagamento, metodo_pagamento, valor, tipo_documento, encode(nota_fiscal, \'base64\') AS nota_fiscal FROM pagamento ORDER BY data_pagamento DESC;');
       const pagamentos = result.rows;
       res.json(pagamentos);
   } catch (error) {

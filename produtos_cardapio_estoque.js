@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Iniciando o carregamento do cardápio.");
 
-    fetch('http://localhost:3000/cardapio')
+    fetch('http://localhost:3000/produtosEstoque')
         .then(response => {
             console.log("Resposta do servidor recebida:", response);
             if (!response.ok) {
@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
             data.forEach(cardapio => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${cardapio.nome_item}</td>
-                    <td>${cardapio.ingredientes}</td>
-                    <td>${formatarPreco(cardapio.preco_item)}</td>
-                    <td>${cardapio.id}</td>
+                    <td>${cardapio.prato}</td>
+                    <td>${formatarPreco(cardapio.preco)}</td>
+                    <td>${cardapio.ingrediente}</td>
+                    <td>${cardapio.fornecedor}</td>
                 `;
                 listaCardapio.appendChild(tr);
             });
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const divError = document.getElementById('divError');
 
             if (errorMessage && divError) {
-                errorMessage.textContent = error;
+                errorMessage.textContent = error.message || 'Erro desconhecido ao carregar o cardápio.';
                 errorMessage.style.color = '#ff0000';
                 errorMessage.style.fontWeight = 'bold';
                 errorMessage.style.display = 'block';

@@ -52,23 +52,29 @@ async function buscarQuartosDisponiveis() {
 // Função para selecionar o quarto desejado para a reserva
 function selecionarQuarto(nQuarto) {
     quartoSelecionado = nQuarto;
-    document.getElementById('n-quarto').value = nQuarto; // Preenche o campo com o número do quarto
+    document.getElementById('n_quarto').value = nQuarto; // Preenche o campo com o número do quarto
     alert("Quarto Nº " + nQuarto + " selecionado para reserva.");
 }
 
 // Função para criar uma reserva com os dados fornecidos
 async function criarReserva() {
-    const cpfHospede = document.getElementById('cpf-hospede').value; // Corrigido o ID
-    const dataEntrada = document.getElementById('data_entrada').value; // Corrigido o ID
-    const dataSaida = document.getElementById('data_saida').value; // Corrigido o ID
-    const nQuarto = document.getElementById('n-quarto').value; // Corrigido o ID
+    // Captura os dados do formulário
+    const cpfHospede = document.getElementById('cpf_hospede').value;
+    const dataEntrada = document.getElementById('data_entrada').value;
+    const dataSaida = document.getElementById('data_saida').value;
+    const nQuarto = document.getElementById('n_quarto').value;
+    const codPagamento = document.getElementById('cod_pagamento').value;
+    const metodoPagamento = document.getElementById('metodo_pagamento').value;
+    const valorPagamento = document.getElementById('valor').value;
 
-    if (!cpfHospede || !dataEntrada || !dataSaida || !nQuarto) {
-        alert("Por favor, preencha todos os campos para a reserva.");
+    // Verifica se todos os campos estão preenchidos
+    if (!cpfHospede || !dataEntrada || !dataSaida || !nQuarto || !codPagamento || !metodoPagamento || !valorPagamento) {
+        alert("Por favor, preencha todos os campos.");
         return;
     }
 
     try {
+        // Faz a requisição POST para o servidor com os dados completos
         const response = await fetch('http://localhost:3000/criar_reserva', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -76,10 +82,14 @@ async function criarReserva() {
                 data_entrada: dataEntrada,
                 data_saida: dataSaida,
                 n_quarto: nQuarto,
-                cpf_hospede: cpfHospede
+                cpf_hospede: cpfHospede,
+                cod_pagamento: codPagamento,
+                metodo_pagamento: metodoPagamento,
+                valor: valorPagamento
             })
         });
 
+        // Verifica a resposta do servidor
         if (!response.ok) {
             alert("Erro ao criar a reserva. Verifique as informações e tente novamente.");
             return;
@@ -87,6 +97,7 @@ async function criarReserva() {
 
         alert("Reserva criada com sucesso!");
     } catch (error) {
+        console.error("Erro ao criar a reserva:", error);
         alert("Erro ao criar a reserva. Tente novamente mais tarde.");
     }
 }

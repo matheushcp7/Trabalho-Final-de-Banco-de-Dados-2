@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 // Cria um Blob com o tipo MIME correto
                 const blob = new Blob([byteArray], { type: pagamento.tipo_documento });
                 const url = URL.createObjectURL(blob);
-
+                
 
                 const row = document.createElement('tr');
                 row.innerHTML = `

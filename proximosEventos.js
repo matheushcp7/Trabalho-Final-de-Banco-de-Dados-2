@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button onclick="excluirEvento(${evento.id_evento})" class="btn btn-danger">Excluir</button>
                     </td>
                     <td>
-                        <button onclick="alterarEvento(${evento.id_evento})" class="btn btn-primary">Alterar</button>
+                        <button onclick="alterarEvento('${evento.id_evento}', '${evento.nome_evento}', '${evento.data_evento}', '${evento.custos}', '${evento.localizacao}', '${evento.numeroparticipantes}', '${evento.capacidade_evento}', '${evento.tema_evento}')" class="btn btn-primary">Alterar</button>
                     </td>
                     <td>
                         <label for="hospede-evento" class="form-label text-white"></label>
@@ -58,6 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
             divError.style.backgroundColor = '#ffffff';
         });
 });
+
+
+function alterarEvento(id_evento, nome_evento, data_evento, custos, localizacao, numeroparticipantes, capacidade_evento, tema_evento) {
+    // Codifica os parâmetros na URL
+    const url = `alterarEvento.html?id_evento=${id_evento}&nome_evento=${nome_evento}&data_evento=${encodeURIComponent(data_evento)}&custos=${custos}&localizacao=${localizacao}&numeroParticipantes=${numeroparticipantes}&capacidade_evento=${capacidade_evento}&tema_evento=${tema_evento}`;
+    // Redireciona para a página alterarReserva.html com os dados da reserva
+    window.location.href = url;
+}
+
 
 
 function adicionarHospede(cpfHospede, idEvento) {

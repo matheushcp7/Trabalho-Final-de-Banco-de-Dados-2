@@ -33,15 +33,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 });
 
-// Função para excluir reserva
 function excluirReserva(data_saida, data_entrada, n_quarto, cpf_hosp) {
+    // Obtém a div onde os campos de entrada serão inseridos
+    const divExcluir = document.getElementById('campo_pagamento');
+
+    // Insere o campo de entrada para o código de pagamento e o botão de confirmação na div
+    divExcluir.innerHTML = `
+        <label class="form-label text-white">Código do Pagamento:</label>
+        <input type="text" id="cod_pagamento" class="form-control" required placeholder="Digite o código do pagamento">
+        <button onclick="confirmarExclusaoReserva('${data_saida}', '${data_entrada}', '${n_quarto}', '${cpf_hosp}')" class="btn btn-danger mt-2">Confirmar Exclusão</button>
+    `;
+}
+
+function confirmarExclusaoReserva(data_saida, data_entrada, n_quarto, cpf_hosp) {
+    // Obtém o valor digitado no campo 'cod_pagamento'
+    const cod_pagamento = document.getElementById('cod_pagamento').value;
+
+    if (!cod_pagamento) {
+        alert('Por favor, insira o código do pagamento.');
+        return;
+    }
+
     if (confirm('Tem certeza que deseja excluir esta reserva?')) {
         fetch('http://localhost:3000/reservas', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ data_saida, data_entrada, n_quarto, cpf_hosp }),
+            body: JSON.stringify({ data_saida, data_entrada, n_quarto, cpf_hosp, cod_pagamento }),
         })
         .then(response => {
             if (response.ok) {
@@ -56,6 +75,7 @@ function excluirReserva(data_saida, data_entrada, n_quarto, cpf_hosp) {
         });
     }
 }
+
 
 // Função para redirecionar para a página de alteração de reserva
 function alterarReserva(n_quarto, cpf_hospede, data_entrada, data_saida) {

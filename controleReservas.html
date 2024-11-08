@@ -36,8 +36,14 @@
                             href="mostrarHospedesMortos.html">Hospedes Mortos</a></li>
                     <li class="nav-item"><a class="nav-link text-white" aria-current="page"
                             href="relatorioMensal.html">Relatorio mensal</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" aria-current="page"
-                                href="permissao.html">Permissões</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="permissao.html">Permissões</a></li>
+
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="criarSecretaria.html">Cadastrar secretaria</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" aria-current="page"
+                            href="matarSecretaria.html">Matar secretaria</a></li>
+
                 </ul>
             </div>
         </div>
@@ -53,9 +59,10 @@
         <!-- Conteúdo principal em cima da overlay -->
         <div class="container position-relative text-white z-index-2 pt-5">
             <button onclick="window.location.href='criar_reserva.html';">Criar Reserva</button>
+            
             <div class="text-center mt-5">
                 <h2 class="text-white">Lista de Reservas</h2>
-                <!-- Tabela para exibir reservas -->
+                <div id="campo_pagamento"></div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-white">
                         <thead class="table-dark">
